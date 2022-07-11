@@ -88,11 +88,23 @@ skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
 # COPY OCI IMAGE TO DOCKER IMAGE WITH SKOPEO
 ```
 skopeo copy oci-archive:my-oci-image.tar \
-docker-archive:my-docker-image.tar \
+docker-archive:my-docker-image-amd64.tar \
 --override-arch=amd64
 ```
 ```
-docker load -i my-docker-image.tar | \
+skopeo copy oci-archive:my-oci-image.tar \
+docker-archive:my-docker-image-arm64.tar \
+--override-arch=arm64
+```
+# LOAD AND TAG AMD64 IMAGE
+```
+docker load -i my-docker-image-amd64.tar | \
+awk -F':' '{print $NF}' | \
+xargs -i docker tag {} my-docker-image:v1
+```
+# LOAD AND TAG ARM64 IMAGE
+```
+docker load -i my-docker-image-arm64.tar | \
 awk -F':' '{print $NF}' | \
 xargs -i docker tag {} my-docker-image:v1
 ```
