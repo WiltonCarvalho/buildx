@@ -10,9 +10,15 @@ apt install docker.io skopeo jq
 mkdir -p $HOME/.docker/cli-plugins
 ```
 ```
-BUILDX_VERSION=$(curl -fsSL https://github.com/docker/buildx/releases | grep -m 1 -Eo 'v[0-9]+\.[0-9]+\.[0-9]*')
-curl -fsSL https://github.com/docker/buildx/releases/download/$BUILDX_VERSION/buildx-$BUILDX_VERSION.linux-amd64 \
+RELESES=$(https://github.com/docker/buildx/releases)
+BUILDX_VERSION=$(curl -fsSL $RELESES | \
+grep -m 1 -Eo 'v[0-9]+\.[0-9]+\.[0-9]*')
+```
+```
+curl -fsSL $RELESES/download/$BUILDX_VERSION/buildx-$BUILDX_VERSION.linux-amd64 \
   -o $HOME/.docker/cli-plugins/docker-buildx
+```
+```
 chmod +x $HOME/.docker/cli-plugins/docker-buildx
 ```
 
@@ -81,19 +87,24 @@ skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
 
 # COPY OCI IMAGE TO DOCKER IMAGE WITH SKOPEO
 ```
-skopeo copy oci-archive:my-oci-image.tar docker-archive:my-docker-image.tar --override-arch=amd64
+skopeo copy oci-archive:my-oci-image.tar \
+docker-archive:my-docker-image.tar \
+--override-arch=amd64
 ```
 ```
-docker load -i my-docker-image.tar | awk -F':' '{print $NF}' | xargs -i docker tag {} my-docker-image
+docker load -i my-docker-image.tar | \
+awk -F':' '{print $NF}' | \
+xargs -i docker tag {} my-docker-image:v1
 ```
 # TEST
 ```
-docker run -it --rm my-docker-image
+docker run -it --rm my-docker-image:v1
 ```
 
 # PUSH TO DOCKER REGISTRY WITH SKOPEO
 ```
-skopeo copy oci-archive:my-oci-image.tar docker://127.0.0.1:5000/my-docker-image:v1 \
+skopeo copy oci-archive:my-oci-image.tar \
+docker://127.0.0.1:5000/my-docker-image:v1 \
 --dest-tls-verify=false
 ```
 ```
