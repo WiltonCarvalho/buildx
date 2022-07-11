@@ -10,7 +10,7 @@ apt install docker.io skopeo jq
 mkdir -p $HOME/.docker/cli-plugins
 ```
 ```
-RELESES=$(https://github.com/docker/buildx/releases)
+RELESES="https://github.com/docker/buildx/releases"
 BUILDX_VERSION=$(curl -fsSL $RELESES | \
 grep -m 1 -Eo 'v[0-9]+\.[0-9]+\.[0-9]*')
 ```
