@@ -28,7 +28,8 @@ docker run -d --rm --name registry -p 5000:5000 registry:2
 
 # IMAGE BUILDER
 ```
-docker buildx create --name img-builder --use --driver docker-container --driver-opt image=moby/buildkit:v0.10.3 --driver-opt network=host
+docker buildx create --name img-builder --use --driver docker-container \
+--driver-opt image=moby/buildkit:v0.10.3 --driver-opt network=host
 ```
 
 # DOCKERFILE
@@ -43,7 +44,8 @@ EOF
 
 # BUILD TO DOCKER REGISTRY WITH BUILDX
 ```
-docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull --push -t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
+docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull --push \
+-t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
 ```
 
 # CHECK MULTI ARCHITECTURE
@@ -67,10 +69,12 @@ docker run -it --rm 127.0.0.1:5000/my-docker-image:v1
 
 # BUILD TO OCI TAR WITH BUILDX
 ```
-docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull -o type=oci,dest=- --progress=plain . > my-oci-image.tar
+docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
+-o type=oci,dest=- --progress=plain . > my-oci-image.tar
 ```
 ```
-skopeo inspect --raw oci-archive:my-oci-image.tar | jq -r '.manifests[].platform.architecture'
+skopeo inspect --raw oci-archive:my-oci-image.tar | \
+jq -r '.manifests[].platform.architecture'
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=amd64
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
 ```
@@ -89,7 +93,8 @@ docker run -it --rm my-docker-image
 
 # PUSH TO DOCKER REGISTRY WITH SKOPEO
 ```
-skopeo copy oci-archive:my-oci-image.tar docker://127.0.0.1:5000/my-docker-image:v1 --dest-tls-verify=false
+skopeo copy oci-archive:my-oci-image.tar docker://127.0.0.1:5000/my-docker-image:v1 \
+--dest-tls-verify=false
 ```
 ```
 docker pull 127.0.0.1:5000/my-docker-image:v1
