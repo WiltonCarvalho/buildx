@@ -51,10 +51,10 @@ HEALTHCHECK --start-period=1s --timeout=10s --interval=10s \
 EOF
 ```
 
-# BUILD TO DOCKER REGISTRY WITH BUILDX
+# PUSH TO DOCKER REGISTRY WITH BUILDX
 ```
-docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull --push \
--t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
+docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
+--push -t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
 ```
 
 # CHECK MULTI ARCHITECTURE
@@ -76,7 +76,7 @@ docker inspect 127.0.0.1:5000/my-docker-image:v1 | grep Architecture
 docker run -it --rm 127.0.0.1:5000/my-docker-image:v1
 ```
 
-# BUILD TO OCI TAR WITH BUILDX
+# PUSH TO OCI TAR WITH BUILDX
 ```
 docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
 -o type=oci,dest=- --progress=plain . > my-oci-image.tar
@@ -88,7 +88,7 @@ skopeo inspect oci-archive:my-oci-image.tar --override-arch=amd64
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
 ```
 
-# COPY OCI IMAGE TO DOCKER IMAGE WITH SKOPEO
+# CONVERT OCI IMAGE TO DOCKER IMAGE WITH SKOPEO
 ```
 skopeo copy oci-archive:my-oci-image.tar \
 docker-archive:my-docker-image-amd64.tar \
