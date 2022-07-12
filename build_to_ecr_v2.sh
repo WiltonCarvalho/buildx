@@ -27,6 +27,6 @@ else
   skopeo copy --all docker://$REPOSITORY_URI:$IMAGE_TAG docker://$REPOSITORY_URI:latest
   skopeo copy --all docker://$REPOSITORY_URI:$IMAGE_TAG docker://$REPOSITORY_URI:develop
   # Multi Arch Tags
-  skopeo copy --override-arch=amd64 docker://$REPOSITORY_URI:$IMAGE_TAG docker://$REPOSITORY_URI:$VERSION-amd64
-  skopeo copy --override-arch=arm64 docker://$REPOSITORY_URI:$IMAGE_TAG docker://$REPOSITORY_URI:$VERSION-arm64
+  skopeo copy --override-arch=amd64 docker://$REPOSITORY_URI:$IMAGE_TAG docker://$REPOSITORY_URI:$IMAGE_TAG-amd64
+  skopeo copy --override-arch=arm64 docker://$REPOSITORY_URI:$IMAGE_TAG docker://$REPOSITORY_URI:$IMAGE_TAG-arm64
 fi
