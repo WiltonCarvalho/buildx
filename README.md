@@ -82,10 +82,10 @@ docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
 skopeo inspect --raw oci-archive:my-oci-image.tar | jq
 ```
 ```
-skopeo inspect oci-archive:my-oci-image.tar --override-arch=amd64
+skopeo inspect oci-archive:my-oci-image.tar --override-arch=amd64 | jq
 ```
 ```
-skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
+skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64 | jq
 ```
 
 ### CONVERT OCI IMAGE TO DOCKER IMAGE WITH SKOPEO
