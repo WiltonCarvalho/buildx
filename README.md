@@ -33,12 +33,9 @@ docker run -d --rm --name registry -p 5000:5000 registry:2
 
 ### IMAGE BUILDER
 ```
-BUILDKIT_RELESES="https://github.com/moby/buildkit/releases"
-BUILDKIT_VERSION=$(curl -fsL $BUILDKIT_RELESES | grep -m 1 -Eo 'v[0-9]+\.[0-9]+\.[0-9]*')
-```
-```
-docker buildx create --name img-builder --use --driver docker-container \
---driver-opt image=moby/buildkit:$BUILDKIT_VERSION --driver-opt network=host
+docker buildx create --name image-builder --use \
+  --driver docker-container \
+  --driver-opt network=host
 ```
 
 ### DOCKERFILE
