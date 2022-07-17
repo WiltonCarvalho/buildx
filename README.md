@@ -79,11 +79,12 @@ docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
   -o type=oci,dest=- --progress=plain . > my-oci-image.tar
 ```
 ```
-skopeo inspect --raw oci-archive:my-oci-image.tar | \
-  jq -r '.manifests[].platform.architecture'
-
+skopeo inspect --raw oci-archive:my-oci-image.tar | jq
+```
+```
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=amd64
-
+```
+```
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
 ```
 
