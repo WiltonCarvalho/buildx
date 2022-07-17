@@ -102,13 +102,13 @@ skopeo copy oci-archive:my-oci-image.tar \
 ### LOAD AND TAG AMD64 IMAGE
 ```
 docker load -i my-docker-image-amd64.tar | \
-  awk -F':' '{print $NF}' | \
+  awk '{print $NF}' | \
   xargs -i docker tag {} my-docker-image:v1
 ```
 ### LOAD AND TAG ARM64 IMAGE
 ```
 docker load -i my-docker-image-arm64.tar | \
-  awk -F':' '{print $NF}' | \
+  awk '{print $NF}' | \
   xargs -i docker tag {} my-docker-image:v1
 ```
 ### TEST
