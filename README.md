@@ -15,7 +15,7 @@ BUILDX_VERSION=$(curl -fsL $BUILDX_RELESES | grep -m 1 -Eo 'v[0-9]+\.[0-9]+\.[0-
 ```
 ```
 curl -fsSL $BUILDX_RELESES/download/$BUILDX_VERSION/buildx-$BUILDX_VERSION.linux-amd64 \
--o $HOME/.docker/cli-plugins/docker-buildx
+  -o $HOME/.docker/cli-plugins/docker-buildx
 ```
 ```
 chmod +x $HOME/.docker/cli-plugins/docker-buildx
@@ -51,7 +51,7 @@ EOF
 ### PUSH TO DOCKER REGISTRY WITH BUILDX
 ```
 docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
---push -t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
+  --push -t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
 ```
 
 ### CHECK MULTI ARCHITECTURE
@@ -76,37 +76,39 @@ docker run -it --rm 127.0.0.1:5000/my-docker-image:v1
 ### PUSH TO OCI TAR WITH BUILDX
 ```
 docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
--o type=oci,dest=- --progress=plain . > my-oci-image.tar
+  -o type=oci,dest=- --progress=plain . > my-oci-image.tar
 ```
 ```
 skopeo inspect --raw oci-archive:my-oci-image.tar | \
-jq -r '.manifests[].platform.architecture'
+  jq -r '.manifests[].platform.architecture'
+
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=amd64
+
 skopeo inspect oci-archive:my-oci-image.tar --override-arch=arm64
 ```
 
 ### CONVERT OCI IMAGE TO DOCKER IMAGE WITH SKOPEO
 ```
 skopeo copy oci-archive:my-oci-image.tar \
-docker-archive:my-docker-image-amd64.tar \
---override-arch=amd64
+  docker-archive:my-docker-image-amd64.tar \
+  --override-arch=amd64
 ```
 ```
 skopeo copy oci-archive:my-oci-image.tar \
-docker-archive:my-docker-image-arm64.tar \
---override-arch=arm64
+  docker-archive:my-docker-image-arm64.tar \
+  --override-arch=arm64
 ```
 ### LOAD AND TAG AMD64 IMAGE
 ```
 docker load -i my-docker-image-amd64.tar | \
-awk -F':' '{print $NF}' | \
-xargs -i docker tag {} my-docker-image:v1
+  awk -F':' '{print $NF}' | \
+  xargs -i docker tag {} my-docker-image:v1
 ```
 ### LOAD AND TAG ARM64 IMAGE
 ```
 docker load -i my-docker-image-arm64.tar | \
-awk -F':' '{print $NF}' | \
-xargs -i docker tag {} my-docker-image:v1
+  awk -F':' '{print $NF}' | \
+  xargs -i docker tag {} my-docker-image:v1
 ```
 ### TEST
 ```
@@ -116,8 +118,8 @@ docker run -it --rm my-docker-image:v1
 ### PUSH TO DOCKER REGISTRY WITH SKOPEO
 ```
 skopeo copy oci-archive:my-oci-image.tar \
-docker://127.0.0.1:5000/my-docker-image:v1 \
---dest-tls-verify=false
+  docker://127.0.0.1:5000/my-docker-image:v1 \
+  --dest-tls-verify=false
 ```
 ```
 docker pull 127.0.0.1:5000/my-docker-image:v1
