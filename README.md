@@ -1,8 +1,15 @@
 ## MULTI ARCHITECTURE CONTAINER IMAGES
 
-### INSTALL DOCKER AND CONTAINER TOOLS
+### INSTALL DOCKER
 ```
-apt install docker.io skopeo jq
+sudo apt update
+```
+```
+sudo apt -y install docker.io
+```
+```
+sudo adduser $USER docker
+sudo su - $USER
 ```
 
 ### INSTALL BUILDX DOCKER PLUGIN
@@ -50,8 +57,9 @@ EOF
 
 ### PUSH TO DOCKER REGISTRY WITH BUILDX
 ```
-docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
-  --push -t 127.0.0.1:5000/my-docker-image:v1 --progress=plain .
+docker buildx build --platform=linux/amd64,linux/arm64/v8 --pull --push \
+  --tag 127.0.0.1:5000/my-docker-image:v1 \
+  --progress=plain .
 ```
 
 ### CHECK MULTI ARCHITECTURE
@@ -75,8 +83,13 @@ docker run -it --rm 127.0.0.1:5000/my-docker-image:v1
 
 ### PUSH TO OCI TAR WITH BUILDX
 ```
-docker buildx build --platform=linux/arm64/v8,linux/amd64 --pull \
-  -o type=oci,dest=- --progress=plain . > my-oci-image.tar
+docker buildx build --platform=linux/amd64,linux/arm64/v8 --pull \
+  -o type=oci,dest=- \
+  --progress=plain . > my-oci-image.tar
+```
+### SKOPEO ( Ubuntu 22.04 )
+```
+sudo apt -y install jq skopeo
 ```
 ```
 skopeo inspect --raw oci-archive:my-oci-image.tar | jq
@@ -120,7 +133,22 @@ docker run -it --rm my-docker-image:v1
 ```
 skopeo copy oci-archive:my-oci-image.tar \
   docker://127.0.0.1:5000/my-docker-image:v1 \
-  --dest-tls-verify=false
+  --dest-tls-verify=false \
+  --all
+```
+### PUSH TAG AMD64 TO DOCKER REGISTRY WITH SKOPEO
+```
+skopeo copy oci-archive:my-oci-image.tar \
+  docker://127.0.0.1:5000/my-docker-image:v1-amd4 \
+  --dest-tls-verify=false \
+  --override-arch=amd64
+```
+### PUSH TAG ARM64 TO DOCKER REGISTRY WITH SKOPEO
+```
+skopeo copy oci-archive:my-oci-image.tar \
+  docker://127.0.0.1:5000/my-docker-image:v1-arm64 \
+  --dest-tls-verify=false \
+  --override-arch=arm64
 ```
 ```
 docker pull 127.0.0.1:5000/my-docker-image:v1
